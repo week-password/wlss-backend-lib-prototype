@@ -1,0 +1,58 @@
+include = ["wlss/**", "tests/**"]
+line-length = 120
+
+[lint]
+
+ignore = [
+    "D",  # ignores missing docstring
+    "RSE102",  # ignores RSE102 (unnecessary-paren-on-raise-exception) since we think that empty parens is more clear
+    "S101",  # ignores S101 since we don't use python optimizations with "-O"
+    "TD002",  # ignores Missing author in TODO
+    "TD003",  # ignores Missing issue link on the line following this TODO
+    "TRY201",  # ignores Use `raise` without specifying exception name
+]
+
+select = [
+    "ALL",  # enable all rules by default
+]
+
+
+[lint.per-file-ignores]
+
+# files with tests
+"tests/*test_*" = [
+    "ANN",  # Absence of function annotations and type comments.
+    "ARG001",  # Unused function argument: {name}
+    "D",  # Missing docstrings.
+    "N802",  # Function name ... should be lowercase
+    "PLR2004",  # Magic value used in comparison, consider replacing 200 with a constant variable.
+    "PT001",  # Use `@pytest.fixture()` over `@pytest.fixture`.
+    "S101",  # Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+]
+
+
+[lint.flake8-annotations]
+# Whether to suppress ANN401 for dynamically typed *args and **kwargs arguments
+allow-star-arg-any = true
+
+
+[lint.flake8-type-checking]
+
+# Enforce TC001, TC002, and TC003 rules even when valid runtime imports are present for the same module.
+strict = true
+
+
+[lint.isort]
+
+# A list of modules to consider first-party, regardless of whether they
+# can be identified as such via introspection of the local filesystem.
+known-first-party = ["src", "tests"]
+
+# The number of blank lines to place after imports.
+lines-after-imports = 2
+
+# Order imports by type, which is determined by case, in addition to alphabetically.
+order-by-type = false
+
+# Add the specified import line to all files.
+required-imports = ["from __future__ import annotations"]

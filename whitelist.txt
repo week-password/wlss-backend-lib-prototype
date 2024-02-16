@@ -1,0 +1,11 @@
+# exception
+exc
+
+# temporary
+tmp
+
+# without type annotation
+untyped
+
+# Wish List Sharing Service (project name)
+wlss

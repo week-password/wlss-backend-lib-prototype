@@ -1,0 +1,18 @@
+[run]
+
+branch = True
+
+
+[report]
+
+exclude_lines =
+    if TYPE_CHECKING:
+    pragma: no cover
+
+fail_under = 100
+
+show_missing = True
+
+skip_covered = True
+
+skip_empty = True

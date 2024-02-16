@@ -1,0 +1,38 @@
+[tool.poetry]
+
+authors = [
+    "Alexey Tsivunin <alexey.tsivunin@yandex.ru>",
+]
+description = "Library used by WLSS backend."
+name = "wlss"
+version = "0.1.0"
+packages = [{include="wlss"}]
+
+
+[tool.poetry.dependencies]
+python = "3.11.*"
+typing-extensions = "^4.5.0"
+
+
+[tool.poetry.group.lint]
+optional = true
+
+[tool.poetry.group.lint.dependencies]
+flake8 = "7.0.0"
+flake8-spellcheck = "0.28.0"
+mypy = "1.8.0"
+ruff = "0.2.2"
+
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "8.0.1"
+pytest-cov = "4.1.0"
+pytest-spec = "3.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

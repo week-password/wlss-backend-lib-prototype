@@ -1,0 +1,15 @@
+[flake8]
+
+filename =
+    ./src/*,
+    ./tests/*,
+
+# we're going to use flake8 only for spellchecking
+# because our main linter is ruff
+select = SC100, SC200
+
+
+# flake8-spellcheck ====================================================================================================
+# Disable spellcheck error for words listed in this file
+dictionaries = en_US,python,technical
+whitelist = whitelist.txt
