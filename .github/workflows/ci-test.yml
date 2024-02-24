@@ -1,0 +1,58 @@
+name: Test
+run-name: Test commit "${{ github.sha }}"
+
+on:
+  push:
+    branches:
+      - "*"
+jobs:
+  pytest:
+    name: Pytest
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Cache Docker layers
+        uses: ./.github/actions/docker/use-buildx-cache
+        env:
+          CACHE_KEY_PREFIX: 'envs-ci-test'  # prefix should match directory which contains Dockerfile used for build
+
+      - name: Cache pytest
+        uses: actions/cache@v3
+        with:
+          path: ./.pytest_cache
+          key: pytest-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            pytest-${{ runner.os }}-${{ github.ref_name }}
+            pytest-${{ runner.os }}-${{ github.event.repository.default_branch }}
+
+      - name: Create .env file
+        run: source envs/ci/test/env.sh
+
+      - name: Build images
+        run: docker compose --file envs/ci/test/docker-compose.yml build
+
+      - name: Run pytest
+        run: docker compose --file envs/ci/test/docker-compose.yml run pytest
+
+      - name: Update buildx cache
+        env:
+          ENV_FILE: envs/ci/test/.env
+        uses: ./.github/actions/docker/update-buildx-cache
+
+  pytest-badge:
+    name: Pytest badge
+    runs-on: ubuntu-latest
+    if: ${{ (success() || failure()) && github.ref_name == 'develop' }}
+    needs: [pytest]
+    steps:
+      - name: Create pytest badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.WLSS_BADGES_GIST_TOKEN }}
+          gistID: 84d5c1b8e453f98a464526d51217b3ab
+          filename: pytest.json
+          label: pytest
+          message: ${{ needs.pytest.result == 'success' && '100%' || 'failed' }}
+          color: ${{ needs.pytest.result == 'success' && vars.BADGE_COLOR_SUCCESS || vars.BADGE_COLOR_FAILURE }}

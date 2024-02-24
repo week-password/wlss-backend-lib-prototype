@@ -1,0 +1,151 @@
+name: Lint
+run-name: Lint commit "${{ github.sha }}"
+
+on:
+  push:
+    branches:
+      - "*"
+jobs:
+  mypy:
+    name: Mypy
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Cache Docker layers
+        uses: ./.github/actions/docker/use-buildx-cache
+        env:
+          CACHE_KEY_PREFIX: 'envs-ci-lint'  # prefix should match directory which contains Dockerfile used for build
+
+      - name: Cache mypy
+        uses: actions/cache@v3
+        with:
+          path: ./.mypy_cache
+          key: mypy-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            mypy-${{ runner.os }}-${{ github.ref_name }}
+            mypy-${{ runner.os }}-${{ github.event.repository.default_branch }}
+
+      - name: Create .env file
+        run: source envs/ci/lint/env.sh
+
+      - name: Build mypy
+        run: docker compose --file envs/ci/lint/docker-compose.yml build mypy
+
+      - name: Run mypy
+        run: docker compose --file envs/ci/lint/docker-compose.yml run mypy
+
+      - name: Update buildx cache
+        env:
+          ENV_FILE: envs/ci/lint/.env
+        uses: ./.github/actions/docker/update-buildx-cache
+
+  mypy-badge:
+    name: Mypy badge
+    runs-on: ubuntu-latest
+    if: ${{ (success() || failure()) && github.ref_name == 'develop' }}
+    needs: [mypy]
+    steps:
+      - name: Create mypy badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.WLSS_BADGES_GIST_TOKEN }}
+          gistID: 84d5c1b8e453f98a464526d51217b3ab
+          filename: mypy.json
+          label: mypy
+          message: ${{ needs.mypy.result == 'success' && 'passed' || 'failed' }}
+          color: ${{ needs.mypy.result == 'success' && vars.BADGE_COLOR_SUCCESS || vars.BADGE_COLOR_FAILURE }}
+
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Cache Docker layers
+        uses: ./.github/actions/docker/use-buildx-cache
+        env:
+          CACHE_KEY_PREFIX: 'envs-ci-lint'  # prefix should match directory which contains Dockerfile used for build
+
+      - name: Cache ruff
+        uses: actions/cache@v3
+        with:
+          path: ./.ruff_cache
+          key: ruff-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            ruff-${{ runner.os }}-${{ github.ref_name }}
+            ruff-${{ runner.os }}-${{ github.event.repository.default_branch }}
+
+      - name: Create .env file
+        run: source envs/ci/lint/env.sh
+
+      - name: Build ruff
+        run: docker compose --file envs/ci/lint/docker-compose.yml build ruff
+
+      - name: Run ruff
+        run: docker compose --file envs/ci/lint/docker-compose.yml run ruff
+
+      - name: Update buildx cache
+        env:
+          ENV_FILE: envs/ci/lint/.env
+        uses: ./.github/actions/docker/update-buildx-cache
+
+  ruff-badge:
+    name: Ruff badge
+    runs-on: ubuntu-latest
+    if: ${{ (success() || failure()) && github.ref_name == 'develop' }}
+    needs: [ruff]
+    steps:
+      - name: Create ruff badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.WLSS_BADGES_GIST_TOKEN }}
+          gistID: 84d5c1b8e453f98a464526d51217b3ab
+          filename: ruff.json
+          label: ruff
+          message: ${{ needs.ruff.result == 'success' && 'passed' || 'failed' }}
+          color: ${{ needs.ruff.result == 'success' && vars.BADGE_COLOR_SUCCESS || vars.BADGE_COLOR_FAILURE }}
+
+  flake8:
+    name: Flake8
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Cache Docker layers
+        uses: ./.github/actions/docker/use-buildx-cache
+        env:
+          CACHE_KEY_PREFIX: 'envs-ci-lint'  # prefix should match directory which contains Dockerfile used for build
+
+      - name: Create .env file
+        run: source envs/ci/lint/env.sh
+
+      - name: Build flake8
+        run: docker compose --file envs/ci/lint/docker-compose.yml build flake8
+
+      - name: Run flake8
+        run: docker compose --file envs/ci/lint/docker-compose.yml run flake8
+
+      - name: Update buildx cache
+        env:
+          ENV_FILE: envs/ci/lint/.env
+        uses: ./.github/actions/docker/update-buildx-cache
+
+  flake8-badge:
+    name: Flake8 badge
+    runs-on: ubuntu-latest
+    if: ${{ (success() || failure()) && github.ref_name == 'develop' }}
+    needs: [flake8]
+    steps:
+      - name: Create flake8 badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.WLSS_BADGES_GIST_TOKEN }}
+          gistID: 84d5c1b8e453f98a464526d51217b3ab
+          filename: flake8.json
+          label: flake8
+          message: ${{ needs.flake8.result == 'success' && 'passed' || 'failed' }}
+          color: ${{ needs.flake8.result == 'success' && vars.BADGE_COLOR_SUCCESS || vars.BADGE_COLOR_FAILURE }}

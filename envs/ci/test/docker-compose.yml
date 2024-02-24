@@ -1,0 +1,18 @@
+name: wlss-ci-test
+
+services:
+  app-build: &app-build
+    build:
+      context: ../../..  # path from the corrent file to the project root dir
+      dockerfile: envs/ci/test/Dockerfile  # path from the project root dir to the Dockerfile
+      cache_from:
+        - type=local,src=${BUILDX_CACHE_SRC}
+      cache_to:
+        - type=local,dest=${BUILDX_CACHE_DEST}
+
+  pytest:
+    <<: *app-build
+    volumes:
+      # bind .pytest_cache to the host in order to store pytest cache in GitHub Cache
+      - ../../../.pytest_cache:/wlss-backend-lib/.pytest_cache  # host path is relative to the current docker-compose file
+    entrypoint: pytest --cov=wlss

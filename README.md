@@ -1,5 +1,10 @@
 # WLSS backend lib
 
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/birthdaysgift/84d5c1b8e453f98a464526d51217b3ab/raw/mypy.json)
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/birthdaysgift/84d5c1b8e453f98a464526d51217b3ab/raw/ruff.json)
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/birthdaysgift/84d5c1b8e453f98a464526d51217b3ab/raw/flake8.json)
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/birthdaysgift/84d5c1b8e453f98a464526d51217b3ab/raw/pytest.json)
+
 Library used by [WLSS backend](https://github.com/week-password/wlss-backend).
 
 

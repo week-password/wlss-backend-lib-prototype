@@ -1,0 +1,33 @@
+name: wlss-ci-lint
+
+services:
+  app-build: &app-build
+    build:
+      context: ../../..  # path from the corrent file to the project root dir
+      dockerfile: envs/ci/lint/Dockerfile  # path from the project root dir to the Dockerfile
+      cache_from:
+        - type=local,src=${BUILDX_CACHE_SRC}
+      cache_to:
+        - type=local,dest=${BUILDX_CACHE_DEST}
+
+  mypy:
+    <<: *app-build
+    volumes:
+      # bind .mypy_cache to the host in order to store mypy cache in GitHub Cache
+      - ../../../.mypy_cache:/wlss-backend-lib/.mypy_cache  # host path is relative to the current docker-compose file
+    entrypoint: mypy
+
+  ruff:
+    <<: *app-build
+    volumes:
+      # bind .ruff_cache to the host in order to store ruff cache in GitHub Cache
+      - ../../../.ruff_cache:/wlss-backend-lib/.ruff_cache  # host path is relative to the current docker-compose file
+    entrypoint: ruff check
+
+  flake8:
+    <<: *app-build
+    entrypoint: flake8
+
+  poetry:
+    <<: *app-build
+    entrypoint: poetry lock --check
