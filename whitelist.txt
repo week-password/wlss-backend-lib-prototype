@@ -1,8 +1,17 @@
+# timezone aware datetime
+AwareDatetime
+
 # exception
 exc
 
+# timezone naive datetime
+NaiveDatetime
+
 # temporary
 tmp
+
+# time zone
+tz
 
 # without type annotation
 untyped
