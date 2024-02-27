@@ -8,7 +8,7 @@ from traceback import extract_tb, print_exception
 from typing import TYPE_CHECKING
 
 import wlss
-from wlss.exceptions import ValidationError
+from wlss.core.exceptions import ValidationError
 
 
 if TYPE_CHECKING:

@@ -7,7 +7,7 @@ from typing import Generic, TYPE_CHECKING, TypeVar
 
 from typing_extensions import override
 
-from wlss.exceptions import NO_TRACEBACK, ValidationError
+from wlss.core.exceptions import NO_TRACEBACK, ValidationError
 
 
 if TYPE_CHECKING:

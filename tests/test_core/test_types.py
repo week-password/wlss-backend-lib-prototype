@@ -9,8 +9,8 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from wlss.exceptions import ValidationError
-from wlss.types import AwareDatetime, Int, NaiveDatetime, PositiveInt, Str
+from wlss.core.exceptions import ValidationError
+from wlss.core.types import AwareDatetime, Int, NaiveDatetime, PositiveInt, Str
 
 
 class Test_Int:  # noqa: N801
@@ -69,7 +69,7 @@ class Test_Int:  # noqa: N801
         """
         py_file = tmp_path / "script.py"
         py_file.write_text(textwrap.dedent("""
-            from wlss.types import Int
+            from wlss.core.types import Int
             class MyInt(Int):
                 VALUE_MIN = Int(0)
 
@@ -85,7 +85,7 @@ class Test_Int:  # noqa: N801
         assert result.returncode == 1
         assert result.stderr.decode("utf-8").split("\n")[-3:] == [
             "    raise ValidationError(msg)",
-            "wlss.exceptions.ValidationError: MyInt value should not be less than 0.",
+            "wlss.core.exceptions.ValidationError: MyInt value should not be less than 0.",
             "",
         ]
 
@@ -103,7 +103,7 @@ class Test_Int:  # noqa: N801
         """
         py_file = tmp_path / "script.py"
         py_file.write_text(textwrap.dedent("""
-            from wlss.types import Int
+            from wlss.core.types import Int
             class MyInt(Int):
                 VALUE_MIN = Int(0)
 
@@ -121,7 +121,7 @@ class Test_Int:  # noqa: N801
         assert result.stderr.decode("utf-8").split("\n")[-10:] == [
             "    foo = MyInt(-10)",
             "          ^^^^^^^^^^",
-            "wlss.exceptions.ValidationError: MyInt value should not be less than 0.",
+            "wlss.core.exceptions.ValidationError: MyInt value should not be less than 0.",
             "",
             "<...>",
             "",
