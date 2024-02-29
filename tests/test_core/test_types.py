@@ -55,6 +55,23 @@ class Test_Int:  # noqa: N801
         assert exc_info.type is ValidationError
         assert exc_info.value.args == ("VALUE_MAX should not be less than VALUE_MIN.", )
 
+    @staticmethod
+    def test_when_object_compared_to_another_object():
+        assert Int(42) == Int(42)
+
+    @staticmethod
+    def test_when_object_compared_to_another_object_of_different_class():
+        class FooInt(Int):
+            ...
+        class BarInt(Int):
+            ...
+
+        assert FooInt(42) != BarInt(42)
+
+    @staticmethod
+    def test_when_object_is_hashed():
+        assert hash(Int(42)) == hash(42)
+
 
     @staticmethod
     def test_when_WLSS_LIB_TRACEBACK_is_not_set(tmp_path):

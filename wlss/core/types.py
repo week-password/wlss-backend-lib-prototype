@@ -41,6 +41,16 @@ class Type(ABC, Generic[T]):
     def value(self: Self) -> T:
         return self._value
 
+    @override
+    def __eq__(self: Self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return other.value == self.value
+        return NotImplemented
+
+    @override
+    def __hash__(self: Self) -> int:
+        return hash(self.value)
+
 
 
 class Int(Type[int]):
