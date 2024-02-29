@@ -149,3 +149,29 @@ jobs:
           label: flake8
           message: ${{ needs.flake8.result == 'success' && 'passed' || 'failed' }}
           color: ${{ needs.flake8.result == 'success' && vars.BADGE_COLOR_SUCCESS || vars.BADGE_COLOR_FAILURE }}
+
+  poetry:
+    name: Poetry
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Cache Docker layers
+        uses: ./.github/actions/docker/use-buildx-cache
+        env:
+          CACHE_KEY_PREFIX: 'envs-ci-lint'  # prefix should match directory which contains Dockerfile used for build
+
+      - name: Create .env file
+        run: source envs/ci/lint/env.sh
+
+      - name: Build poetry
+        run: docker compose --file envs/ci/lint/docker-compose.yml build poetry
+
+      - name: Run poetry
+        run: docker compose --file envs/ci/lint/docker-compose.yml run poetry
+
+      - name: Update buildx cache
+        env:
+          ENV_FILE: envs/ci/lint/.env
+        uses: ./.github/actions/docker/update-buildx-cache
