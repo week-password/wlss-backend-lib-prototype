@@ -4,6 +4,6 @@ from wlss.core.types import Int, PositiveInt
 from wlss.file.constants import BYTE, MEGABYTE
 
 
-class FileSize(Int):
-    VALUE_MAX = PositiveInt(10 * MEGABYTE)
-    VALUE_MIN = PositiveInt(1 * BYTE)
+class FileSize(PositiveInt):
+    VALUE_MAX = Int(10 * MEGABYTE)
+    VALUE_MIN = Int(1 * BYTE)
