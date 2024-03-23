@@ -8,7 +8,7 @@ from wlss.core.types import PositiveInt, Str
 class WishDescription(Str):
     LENGTH_MAX = PositiveInt(10_000)
     LENGTH_MIN = PositiveInt(1)
-    REGEXP = re.compile(r".*")
+    REGEXP = re.compile(r".*", flags=re.DOTALL)
 
 
 class WishTitle(Str):

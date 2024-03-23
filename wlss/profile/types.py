@@ -8,7 +8,7 @@ from wlss.core.types import PositiveInt, Str
 class ProfileDescription(Str):
     LENGTH_MAX = PositiveInt(1000)
     LENGTH_MIN = PositiveInt(1)
-    REGEXP = re.compile(r".{1,1000}")
+    REGEXP = re.compile(r".{1,1000}", flags=re.DOTALL)
 
 
 class ProfileName(Str):
