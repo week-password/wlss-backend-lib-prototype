@@ -14,4 +14,4 @@ class WishDescription(Str):
 class WishTitle(Str):
     LENGTH_MAX = PositiveInt(100)
     LENGTH_MIN = PositiveInt(1)
-    REGEXP = re.compile(r"[A-Za-zА-яЁё'-.() ]*")  # noqa: RUF001
+    REGEXP = re.compile(r".*")
