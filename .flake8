@@ -1,7 +1,7 @@
 [flake8]
 
 filename =
-    ./src/*,
+    ./wlss/*,
     ./tests/*,
 
 # we're going to use flake8 only for spellchecking

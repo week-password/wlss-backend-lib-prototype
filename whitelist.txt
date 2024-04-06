@@ -1,14 +1,29 @@
 # timezone aware datetime
 AwareDatetime
 
+# dot all (used in python's `re` package)
+dotall
+
+# equal (used in python's __eq__)
+eq
+
 # exception
 exc
+
+# exception hook
+excepthook
+
+# full match
+fullmatch
 
 # timezone naive datetime
 NaiveDatetime
 
 # temporary
 tmp
+
+# more than one 'traceback'
+tracebacks
 
 # time zone
 tz
